@@ -8,9 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 
 /**
@@ -41,6 +39,7 @@ public class GridMap {
     private double mousePositionY;
     private boolean dirtyPath = false;
     private FindingMethod findingMethod = FindingMethod.BFS;
+
     public GridMap(double width, double height, int row, int col) {
         widthProperty().set(width);
         heightProperty().set(height);
@@ -282,109 +281,32 @@ public class GridMap {
                 vertexTo[i][j] = null;
             }
         }
+        GridPathSearch gps = null;
         switch (method) {
             case BFS:
-                bfs();
+                gps = new BFS(this);
                 break;
             case DIJKSTRA:
-                dijkstra(true);
+                gps = new Dijkstra(this, true);
                 break;
             case DIJKSTRA_WITHOUT_WEIGHT:
-                dijkstra(false);
+                gps = new Dijkstra(this, false);
                 break;
-            case A_STAR: {
-                AStarSearch search = new AStarSearch(this);
-                cells = search.getCells();
-                vertexTo = search.getVertexTo();
-                System.out.println("A* search algorithm finished in " + search.getStepCount() + " steps.");
-            }
-            break;
+            case A_STAR:
+                gps = new AStarSearch(this);
+                break;
             default:
                 return;
         }
+        cells = gps.getCells();
+        vertexTo = gps.getVertexTo();
+        System.out.println("Finished in " + gps.getStepCount() + " steps.");
         dirtyPath = false;
     }
 
     public void update() {
         if (dirtyPath) {
             updatePath(findingMethod);
-        }
-    }
-
-    public void bfs() {
-        Vertex source = sourceVertex;
-        Vertex target = targetVertex;
-
-        Queue<Vertex> queue = new LinkedList<>();
-        boolean visited[][] = new boolean[rowCount][colCount];
-        queue.offer(source);
-
-        visited[source.getRow()][source.getCol()] = true;
-        cells[source.getRow()][source.getCol()].setDirection(Direction.None);
-
-        boolean done = false;
-        while (!queue.isEmpty()) {
-            Vertex current = queue.poll();
-            for (Vertex neighbor : getNeighbors(current)) {
-                if (visited[neighbor.getRow()][neighbor.getCol()])
-                    continue;
-                queue.offer(neighbor);
-                int row = neighbor.getRow();
-                int col = neighbor.getCol();
-                visited[row][col] = true;
-                cells[row][col].setDirection(neighbor.getDirection());
-
-                vertexTo[row][col] = new Vertex(current.getRow(), current.getCol());
-
-                if (row == target.getRow() && col == target.getCol()) {
-                    done = true;
-                    break;
-                }
-            }
-            if (done) break;
-        }
-    }
-
-    private void dijkstra(boolean weighted) {
-        double distTo[][] = new double[rowCount][colCount];
-        PriorityQueue<Double> pq = new PriorityQueue<>(rowCount * colCount);
-        for (int i = 0; i < rowCount; ++i) {
-            for (int j = 0; j < colCount; ++j) {
-                distTo[i][j] = Integer.MAX_VALUE;
-            }
-        }
-
-        Vertex source = sourceVertex;
-        Vertex target = targetVertex;
-
-        distTo[source.getRow()][source.getCol()] = 0;
-        pq.insert(source.getRow() * colCount + source.getCol(), 0.0);
-        boolean done = false;
-        while (!pq.isEmpty() && !done) {
-            int v = pq.delMin();
-            int row = v / rowCount, col = v % rowCount;
-            for (Vertex w : getNeighbors(new Vertex(row, col))) {
-                int wRow = w.getRow();
-                int wCol = w.getCol();
-                double weight = weighted ? cells[wRow][wCol].getWeight() : 1;
-                if (distTo[wRow][wCol] > distTo[row][col] + weight) {
-                    distTo[wRow][wCol] = distTo[row][col] + weight;
-                    cells[wRow][wCol].setDirection(w.getDirection());
-                    int wIndex = wRow * colCount + wCol;
-                    if (pq.contains(wIndex)) {
-                        pq.changeKey(wIndex, distTo[wRow][wCol]);
-                    } else {
-                        pq.insert(wIndex, distTo[wRow][wCol]);
-                    }
-
-                    vertexTo[wRow][wCol] = new Vertex(row, col);
-                }
-
-                if (wRow == target.getRow() && col == target.getCol()) {
-                    done = true;
-                    break;
-                }
-            }
         }
     }
 

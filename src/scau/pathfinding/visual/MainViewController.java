@@ -77,7 +77,7 @@ public class MainViewController implements Initializable {
         this.gridMap = new GridMap(canvas.getWidth(), canvas.getHeight(), row, col);
         gridMap.setSource(row / 2, col / 3);
         gridMap.setTarget(row / 2, col * 2 / 3);
-        gridMap.bfs();
+        gridMap.updatePath(GridMap.FindingMethod.BFS);
 
         Timeline gameLoop = new Timeline();
         gameLoop.setCycleCount(Timeline.INDEFINITE);

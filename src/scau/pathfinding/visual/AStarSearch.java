@@ -1,30 +1,25 @@
 package scau.pathfinding.visual;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * @author Link
  */
-public class AStarSearch {
-    private Cell[][] cells;
-    private Vertex[][] vertexTo;
-    private int stepCount = 0;
+public class AStarSearch extends GridPathSearch {
     private Distance distance = Distance.Manhattan;
 
-    public AStarSearch(GridMap gridMap) {
-        int rowCount = gridMap.getRowCount();
-        int colCount = gridMap.getColCount();
-        Vertex source = gridMap.getSource();
-        Vertex target = gridMap.getTarget();
+    public AStarSearch(GridMap map) {
+        int rowCount = map.getRowCount();
+        int colCount = map.getColCount();
+        Vertex source = map.getSource();
+        Vertex target = map.getTarget();
 
-        this.cells = new Cell[rowCount][colCount];
-        Cell[][] original = gridMap.getCells();
-        for (int i = 0; i < gridMap.getCells().length; ++i) {
+        vertexTo = new Vertex[rowCount][colCount];
+        cells = new Cell[rowCount][colCount];
+        Cell[][] original = map.getCells();
+        for (int i = 0; i < map.getCells().length; ++i) {
             cells[i] = Arrays.copyOf(original[i], original[i].length);
         }
-
-        Vertex vertexTo[][] = new Vertex[rowCount][colCount];
 
         double[][] distTo = new double[rowCount][colCount];      // actual distance
         for (int i = 0; i < rowCount; ++i)
@@ -40,7 +35,7 @@ public class AStarSearch {
 
             int v = pq.delMin();
             int row = v / rowCount, col = v % rowCount;
-            for (Vertex w : gridMap.getNeighbors(row, col)) {
+            for (Vertex w : map.getNeighbors(row, col)) {
                 int wRow = w.row();
                 int wCol = w.col();
 
@@ -67,36 +62,10 @@ public class AStarSearch {
                 }
             }
         }
-        this.vertexTo = vertexTo;
     }
 
     public void setDistance(Distance distance) {
         this.distance = distance;
-    }
-
-    public Vertex[][] getVertexTo() {
-        return vertexTo;
-    }
-
-    public Vertex vertexTo(int row, int col) {
-        return vertexTo[row][col];
-    }
-
-    /**
-     * @return Snapshot of directions and vertexTo
-     */
-    public Iterator<Snap> iterator() {
-        return new Iterator<Snap>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public Snap next() {
-                return null;
-            }
-        };
     }
 
     private double heuristicDistance(Vertex start, Vertex goal) {
@@ -115,27 +84,10 @@ public class AStarSearch {
         }
     }
 
-    public Cell[][] getCells() {
-        return cells;
-    }
-
-    public int getStepCount() {
-        return stepCount;
-    }
-
     public static enum Distance {
         Manhattan,
         Chebyshev,
         Euclidean
     }
 
-    public class Snap {
-        Direction[][] directions;
-        Vertex[][] vertexTo;
-
-        public Snap(Direction[][] directions, Vertex[][] pathTo) {
-            this.directions = directions;
-            this.vertexTo = pathTo;
-        }
-    }
 }
