@@ -43,7 +43,7 @@ public class GridMap {
     private boolean dirtyPath = false;
     private FindingMethod findingMethod = FindingMethod.BFS;
 
-    public GridMap(double width, double height, int col, int row) {
+    public GridMap(double width, double height, int row, int col) {
         widthProperty().set(width);
         heightProperty().set(height);
         setUpCells(row, col);
