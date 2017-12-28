@@ -37,31 +37,41 @@ public class GridMap {
     private Vertex vertexTo[][];
     private Action action = Action.DISABLE;
     private boolean isMouseInMap;
-
     private double mousePositionX;
     private double mousePositionY;
     private boolean dirtyPath = false;
     private FindingMethod findingMethod = FindingMethod.BFS;
-
     public GridMap(double width, double height, int row, int col) {
         widthProperty().set(width);
         heightProperty().set(height);
         setUpCells(row, col);
     }
 
-    private Iterable<Vertex> getNeighbors(Vertex position) {
+    public Vertex getSource() {
+        return sourceVertex;
+    }
+
+    public Vertex getTarget() {
+        return targetVertex;
+    }
+
+    public Iterable<Vertex> getNeighbors(Vertex position) {
+        return getNeighbors(position.getRow(), position.getCol());
+    }
+
+    public Iterable<Vertex> getNeighbors(int row, int col) {
         List<Vertex> neighbors = new ArrayList<>();
-        if (position.getRow() - 1 >= 0 && cells[position.getRow() - 1][position.getCol()].isPassable()) {
-            neighbors.add(new Vertex(position.getRow() - 1, position.getCol(), Direction.Up));
+        if (row - 1 >= 0 && cells[row - 1][col].isPassable()) {
+            neighbors.add(new Vertex(row - 1, col, Direction.Up));
         }
-        if (position.getCol() - 1 >= 0 && cells[position.getRow()][position.getCol() - 1].isPassable()) {
-            neighbors.add(new Vertex(position.getRow(), position.getCol() - 1, Direction.Left));
+        if (col - 1 >= 0 && cells[row][col - 1].isPassable()) {
+            neighbors.add(new Vertex(row, col - 1, Direction.Left));
         }
-        if (position.getRow() + 1 < rowCount && cells[position.getRow() + 1][position.getCol()].isPassable()) {
-            neighbors.add(new Vertex(position.getRow() + 1, position.getCol(), Direction.Down));
+        if (row + 1 < rowCount && cells[row + 1][col].isPassable()) {
+            neighbors.add(new Vertex(row + 1, col, Direction.Down));
         }
-        if (position.getCol() + 1 < colCount && cells[position.getRow()][position.getCol() + 1].isPassable()) {
-            neighbors.add(new Vertex(position.getRow(), position.getCol() + 1, Direction.Right));
+        if (col + 1 < colCount && cells[row][col + 1].isPassable()) {
+            neighbors.add(new Vertex(row, col + 1, Direction.Right));
         }
         return neighbors;
     }
@@ -137,8 +147,8 @@ public class GridMap {
     }
 
     /**
-     * x => column, from left to right
-     * y => row, form top to bottom
+     * col => column, from left to right
+     * row => row, form top to bottom
      *
      * @param gc GraphicsContext
      */
@@ -282,6 +292,13 @@ public class GridMap {
             case DIJKSTRA_WITHOUT_WEIGHT:
                 dijkstra(false);
                 break;
+            case A_STAR: {
+                AStarSearch search = new AStarSearch(this);
+                cells = search.getCells();
+                vertexTo = search.getVertexTo();
+                System.out.println("A* search algorithm finished in " + search.getStepCount() + " steps.");
+            }
+            break;
             default:
                 return;
         }
@@ -435,6 +452,22 @@ public class GridMap {
         setUpCells(row, col);
     }
 
+    public Cell cell(int row, int col) {
+        return cells[row][col];
+    }
+
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    public int getColCount() {
+        return colCount;
+    }
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+
     public static enum Action {
         DISABLE,
         PUT_OR_REMOVE_BLOCK,
@@ -446,5 +479,6 @@ public class GridMap {
         BFS,
         DIJKSTRA,
         DIJKSTRA_WITHOUT_WEIGHT,
+        A_STAR
     }
 }

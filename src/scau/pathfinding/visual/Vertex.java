@@ -75,4 +75,12 @@ public class Vertex implements Comparable<scau.pathfinding.visual.Vertex> {
         long temp = Double.doubleToLongBits(value);
         return (int) (temp ^ (temp >>> 32));
     }
+
+    public int col() {
+        return col;
+    }
+
+    public int row() {
+        return row;
+    }
 }

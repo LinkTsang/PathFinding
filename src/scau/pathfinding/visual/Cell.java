@@ -3,7 +3,7 @@ package scau.pathfinding.visual;
 /**
  * @author Link
  */
-class Cell {
+public class Cell {
     private Type type = Type.EMPTY;
     private Direction direction = Direction.None;
     private double weight = 1;
