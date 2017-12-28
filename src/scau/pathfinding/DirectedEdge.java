@@ -8,12 +8,12 @@ public class DirectedEdge {
     private final int w;
     private final double weight;
 
-    public DirectedEdge(int from, int to, double weight)
-    {
+    public DirectedEdge(int from, int to, double weight) {
         v = from;
         w = to;
         this.weight = weight;
     }
+
     public int from() {
         return v;
     }

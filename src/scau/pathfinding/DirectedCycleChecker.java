@@ -4,6 +4,7 @@ import java.util.Stack;
 
 /**
  * 检测图是否存在环
+ *
  * @author Link
  */
 public class DirectedCycleChecker {
@@ -11,13 +12,25 @@ public class DirectedCycleChecker {
     private DirectedEdge[] edgeTo;
     private boolean[] onStack;
     private Stack<DirectedEdge> cycle;
-    
+
     public DirectedCycleChecker(AdjListGraph g) {
-        marked  = new boolean[g.V()];
+        marked = new boolean[g.V()];
         onStack = new boolean[g.V()];
-        edgeTo  = new DirectedEdge[g.V()];
+        edgeTo = new DirectedEdge[g.V()];
         for (int v = 0; v < g.V(); ++v)
             if (!marked[v]) dfs(g, v);
+    }
+
+    public static void main(String[] args) {
+        int vertexCount = 10;
+        AdjListGraph g = AdjListGraph.Random(vertexCount);
+        DirectedCycleChecker checker = new DirectedCycleChecker(g);
+        if (checker.hasCycle()) {
+            System.out.println("Found cycle: ");
+            for (DirectedEdge e : checker.cycle) {
+                System.out.println(e);
+            }
+        }
     }
 
     private void dfs(AdjListGraph g, int v) {
@@ -51,17 +64,5 @@ public class DirectedCycleChecker {
 
     public Iterable<DirectedEdge> cycle() {
         return cycle;
-    }
-
-    public static void main(String[] args) {
-        int vertexCount = 10;
-        AdjListGraph g = AdjListGraph.Random(vertexCount);
-        DirectedCycleChecker checker = new DirectedCycleChecker(g);
-        if(checker.hasCycle()) {
-            System.out.println("Found cycle: ");
-            for(DirectedEdge e : checker.cycle) {
-                System.out.println(e);
-            }
-        }
     }
 }

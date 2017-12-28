@@ -28,7 +28,7 @@ public class PathFindingApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(root == null) return false;
+        if (root == null) return false;
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(800);
@@ -39,7 +39,7 @@ public class PathFindingApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        if(!initUILayout(primaryStage)) {
+        if (!initUILayout(primaryStage)) {
             return;
         }
         primaryStage.show();

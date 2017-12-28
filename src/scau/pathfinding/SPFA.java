@@ -16,8 +16,8 @@ public class SPFA implements ShortPath {
     private Iterable<DirectedEdge> cycle;
 
     public SPFA(AdjListGraph g, int s) {
-        distanceTo  = new double[g.V()];
-        edgeTo  = new DirectedEdge[g.V()];
+        distanceTo = new double[g.V()];
+        edgeTo = new DirectedEdge[g.V()];
         onQueue = new boolean[g.V()];
 
         for (int v = 0; v < g.V(); v++)
@@ -32,47 +32,6 @@ public class SPFA implements ShortPath {
             onQueue[v] = false;
             relax(g, v);
         }
-    }
-
-    private void relax(AdjListGraph G, int v)
-    {
-        for (DirectedEdge e : G.adjacency(v))
-        {
-            int w = e.to();
-            if (distanceTo[w] > distanceTo[v] + e.weight())
-            {
-                distanceTo[w] = distanceTo[v] + e.weight();
-                edgeTo[w] = e;
-                if (!onQueue[w])
-                {
-                    queue.offer(w);
-                    onQueue[w] = true;
-                }
-            }
-            if (cost++ % G.V() == 0)
-                findNegativeCycle();
-        }
-    }
-
-
-    private boolean hasNegativeCycle() {
-        return cycle != null;
-    }
-
-    private Iterable<DirectedEdge> nagativeCycle() {
-        return cycle;
-    }
-
-    private void findNegativeCycle() {
-        int V = edgeTo.length;
-        AdjListGraph graph = new AdjListGraph(V);
-        for (DirectedEdge e : edgeTo) {
-            if (e != null) {
-                graph.addEdge(e);
-            }
-        }
-        DirectedCycleChecker checker = new DirectedCycleChecker(graph);
-        cycle = checker.cycle();
     }
 
     public static void main(String[] args) {
@@ -113,6 +72,42 @@ public class SPFA implements ShortPath {
         AdjListGraph g = AdjListGraph.Random(vertexCount);
         //System.out.println(g);
         return g;
+    }
+
+    private void relax(AdjListGraph G, int v) {
+        for (DirectedEdge e : G.adjacency(v)) {
+            int w = e.to();
+            if (distanceTo[w] > distanceTo[v] + e.weight()) {
+                distanceTo[w] = distanceTo[v] + e.weight();
+                edgeTo[w] = e;
+                if (!onQueue[w]) {
+                    queue.offer(w);
+                    onQueue[w] = true;
+                }
+            }
+            if (cost++ % G.V() == 0)
+                findNegativeCycle();
+        }
+    }
+
+    private boolean hasNegativeCycle() {
+        return cycle != null;
+    }
+
+    private Iterable<DirectedEdge> nagativeCycle() {
+        return cycle;
+    }
+
+    private void findNegativeCycle() {
+        int V = edgeTo.length;
+        AdjListGraph graph = new AdjListGraph(V);
+        for (DirectedEdge e : edgeTo) {
+            if (e != null) {
+                graph.addEdge(e);
+            }
+        }
+        DirectedCycleChecker checker = new DirectedCycleChecker(graph);
+        cycle = checker.cycle();
     }
 
     @Override
