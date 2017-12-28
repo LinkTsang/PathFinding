@@ -1,9 +1,9 @@
-package scau.pathfinding.visual;
+package scau.pathfinding.gridmap;
 
 /**
  * @author Link
  */
-public class Vertex implements Comparable<scau.pathfinding.visual.Vertex> {
+public class Vertex implements Comparable<Vertex> {
     private Direction direction;
     private int col;
     private int row;
@@ -29,13 +29,13 @@ public class Vertex implements Comparable<scau.pathfinding.visual.Vertex> {
     }
 
     @Override
-    public int compareTo(scau.pathfinding.visual.Vertex v) {
+    public int compareTo(Vertex v) {
         return Double.compare(this.value, v.value);
     }
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof scau.pathfinding.visual.Vertex && compareTo((scau.pathfinding.visual.Vertex) object) == 0;
+        return object instanceof Vertex && compareTo((Vertex) object) == 0;
     }
 
     public Direction getDirection() {

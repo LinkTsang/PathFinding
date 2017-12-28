@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import scau.pathfinding.gridmap.GridMap;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,6 +31,7 @@ public class MainViewController implements Initializable {
     private Canvas canvas;
 
     private GridMap gridMap;
+    private GridMapView gridMapView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,32 +51,34 @@ public class MainViewController implements Initializable {
         });
 
         canvas.setOnMouseExited(e -> {
-            gridMap.setMouseInMap(false);
+            gridMapView.setMouseInMap(false);
         });
 
         canvas.setOnMouseEntered(e -> {
-            gridMap.setMouseInMap(true);
+            gridMapView.setMouseInMap(true);
         });
 
         canvas.setOnMouseMoved(e -> {
             double mousePositionX = e.getX();
             double mousePositionY = e.getY();
-            gridMap.onMouseMoved(mousePositionX, mousePositionY);
+            gridMapView.onMouseMoved(mousePositionX, mousePositionY);
         });
 
         canvas.setOnMouseClicked(e -> {
             double mousePositionX = e.getX();
             double mousePositionY = e.getY();
             if (e.getButton() == MouseButton.PRIMARY) {
-                gridMap.onMouseAction(mousePositionX, mousePositionY);
+                gridMapView.onMouseAction(mousePositionX, mousePositionY);
             } else if (e.getButton() == MouseButton.SECONDARY) {
-                gridMap.setAction(GridMap.Action.DISABLE);
+                gridMapView.setAction(GridMapView.Action.DISABLE);
             }
         });
 
 
         int row = 16, col = 16;
-        this.gridMap = new GridMap(canvas.getWidth(), canvas.getHeight(), row, col);
+        //this.gridMap = new GridMapView(canvas.getWidth(), canvas.getHeight(), row, col);
+        this.gridMap = new GridMap(row, col);
+        this.gridMapView = new GridMapView(canvas.getWidth(), canvas.getHeight(), gridMap);
         gridMap.setSource(row / 2, col / 3);
         gridMap.setTarget(row / 2, col * 2 / 3);
         gridMap.updatePath(GridMap.FindingMethod.BFS);
@@ -93,23 +97,23 @@ public class MainViewController implements Initializable {
 
     public void render(GraphicsContext gc) {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gridMap.render(gc);
+        gridMapView.render(gc);
     }
 
     public void update() {
-        gridMap.update();
+        gridMapView.update();
     }
 
     public void triggerBlockButton_OnAction(ActionEvent ae) {
-        gridMap.setAction(GridMap.Action.PUT_OR_REMOVE_BLOCK);
+        gridMapView.setAction(GridMapView.Action.PUT_OR_REMOVE_BLOCK);
     }
 
     public void setTargetButton_OnAction(ActionEvent ae) {
-        gridMap.setAction(GridMap.Action.PUT_TARGET);
+        gridMapView.setAction(GridMapView.Action.PUT_TARGET);
     }
 
     public void setSourceButton_OnAction(ActionEvent ae) {
-        gridMap.setAction(GridMap.Action.PUT_SOURCE);
+        gridMapView.setAction(GridMapView.Action.PUT_SOURCE);
     }
 
     public void pathFindingMethod_OnAction(ActionEvent ae) {

@@ -1,4 +1,4 @@
-package scau.pathfinding.visual;
+package scau.pathfinding.gridmap;
 
 import java.util.Iterator;
 
