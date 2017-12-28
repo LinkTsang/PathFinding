@@ -50,9 +50,9 @@
                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0"
                                       GridPane.columnIndex="1">
                                     <children>
-                                        <TextField fx:id="mapRowTextField" text="12"/>
+                                        <TextField fx:id="mapRowTextField" text="16"/>
                                         <Label text="x"/>
-                                        <TextField fx:id="mapColTextField" text="12"/>
+                                        <TextField fx:id="mapColTextField" text="16"/>
                                     </children>
                                     <GridPane.margin>
                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
