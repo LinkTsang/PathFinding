@@ -2,22 +2,19 @@ package scau.pathfinding;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 
 /**
  * @author Link
  */
-public class SPFA implements ShortPath {
-    private double[] distanceTo;
-    private DirectedEdge[] edgeTo;
+public class SPFA extends SingleSourceShortestPath {
     private boolean[] onQueue;
     private Queue<Integer> queue;
     private int cost;
     private Iterable<DirectedEdge> cycle;
 
     public SPFA(AdjListGraph g, int s) {
-        distanceTo = new double[g.V()];
-        edgeTo = new DirectedEdge[g.V()];
+        super(g);
+
         onQueue = new boolean[g.V()];
 
         for (int v = 0; v < g.V(); v++)
@@ -34,21 +31,27 @@ public class SPFA implements ShortPath {
         }
     }
 
-    public static void main(String[] args) {
-        AdjListGraph g0 = test0();
-        AdjListGraph g1 = test1();
-
-        showPath(g0, 0, 1);
-        showPath(g1, 0, 1);
-
-        BellmanFord.showPath(g0, 0, 1);
-        BellmanFord.showPath(g1, 0, 1);
+    public static void test0() {
+        AdjListGraph g = new AdjListGraph(4);
+        g.addEdge(new DirectedEdge(0, 2, 4.2));
+        SPFA spfa = new SPFA(g, 0);
+        spfa.showPathTo(1);
     }
 
-    public static void showPath(AdjListGraph g, int src, int dest) {
-        SPFA spfa = new SPFA(g, src);
-        if (!spfa.hasNegativeCycle()) {
-            Iterable<DirectedEdge> paths = spfa.pathTo(dest);
+    public static void test1() {
+        AdjListGraph g = AdjListGraph.Random(10);
+        SPFA spfa = new SPFA(g, 0);
+        spfa.showPathTo(1);
+    }
+
+    public static void main(String[] args) {
+        test0();
+        test1();
+    }
+
+    public void showPathTo(int dest) {
+        if (!hasNegativeCycle()) {
+            Iterable<DirectedEdge> paths = pathTo(dest);
             if (paths != null) {
                 for (DirectedEdge e : paths) {
                     System.out.println(e);
@@ -59,19 +62,6 @@ public class SPFA implements ShortPath {
         } else {
             System.out.println("Found negative cycle.");
         }
-    }
-
-    public static AdjListGraph test0() {
-        AdjListGraph g = new AdjListGraph(4);
-        g.addEdge(new DirectedEdge(0, 2, 4.2));
-        return g;
-    }
-
-    public static AdjListGraph test1() {
-        int vertexCount = 10;
-        AdjListGraph g = AdjListGraph.Random(vertexCount);
-        //System.out.println(g);
-        return g;
     }
 
     private void relax(AdjListGraph G, int v) {
@@ -108,25 +98,5 @@ public class SPFA implements ShortPath {
         }
         DirectedCycleChecker checker = new DirectedCycleChecker(graph);
         cycle = checker.cycle();
-    }
-
-    @Override
-    public double distanceTo(int v) {
-        return distanceTo[v];
-    }
-
-    @Override
-    public boolean hasPathTo(int v) {
-        return distanceTo[v] < Double.POSITIVE_INFINITY;
-    }
-
-    @Override
-    public Iterable<DirectedEdge> pathTo(int v) {
-        if (!hasPathTo(v)) return null;
-        Stack<DirectedEdge> path = new Stack<>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
-            path.push(e);
-        }
-        return path;
     }
 }

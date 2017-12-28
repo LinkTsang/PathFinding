@@ -1,19 +1,13 @@
 package scau.pathfinding;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 /**
  * @author Link
  */
-public class BellmanFord implements ShortPath {
-    private double distanceTo[];
-    private DirectedEdge edgeTo[];
+public class BellmanFord extends SingleSourceShortestPath {
     private boolean hasNegativeCycle = false;
 
     public BellmanFord(AdjListGraph g, int s) {
-        distanceTo = new double[g.V()];
-        edgeTo = new DirectedEdge[g.V()];
+        super(g);
 
         for (int v = 0; v < g.V(); ++v) {
             distanceTo[v] = Double.POSITIVE_INFINITY;
@@ -35,10 +29,25 @@ public class BellmanFord implements ShortPath {
         test1();
     }
 
-    public static void showPath(AdjListGraph g, int src, int dest) {
-        BellmanFord bf = new BellmanFord(g, src);
-        if (!bf.hasNegativeCycle()) {
-            Iterable<DirectedEdge> paths = bf.pathTo(dest);
+    public static void test0() {
+        AdjListGraph g = new AdjListGraph(4);
+        g.addEdge(new DirectedEdge(0, 2, 4.2));
+        System.out.println(g);
+        SingleSourceShortestPath sp = new BellmanFord(g, 0);
+        sp.showPathTo(1);
+    }
+
+    public static void test1() {
+        int vertexCount = 10;
+        AdjListGraph g = AdjListGraph.Random(vertexCount);
+        System.out.println(g);
+        SingleSourceShortestPath sp = new BellmanFord(g, 0);
+        sp.showPathTo(1);
+    }
+
+    public void showPathTo(int dest) {
+        if (!hasNegativeCycle()) {
+            Iterable<DirectedEdge> paths = pathTo(dest);
             if (paths != null) {
                 for (DirectedEdge e : paths) {
                     System.out.print(e);
@@ -50,19 +59,6 @@ public class BellmanFord implements ShortPath {
         } else {
             System.out.println("Found negative cycle.");
         }
-    }
-
-    public static void test0() {
-        AdjListGraph g = new AdjListGraph(4);
-        g.addEdge(new DirectedEdge(0, 2, 4.2));
-        showPath(g, 0, 1);
-    }
-
-    public static void test1() {
-        int vertexCount = 10;
-        AdjListGraph g = AdjListGraph.Random(vertexCount);
-        System.out.println(g);
-        showPath(g, 0, 1);
     }
 
     private boolean hasNegativeCycle(AdjListGraph g) {
@@ -87,29 +83,5 @@ public class BellmanFord implements ShortPath {
             distanceTo[w] = vw;
             edgeTo[w] = e;
         }
-    }
-
-    @Override
-    public double distanceTo(int v) {
-        return distanceTo[v];
-    }
-
-    @Override
-    public boolean hasPathTo(int v) {
-        return distanceTo[v] < Double.POSITIVE_INFINITY;
-    }
-
-    /**
-     * @param v destination
-     * @return either paths or null if no such path
-     */
-    @Override
-    public Iterable<DirectedEdge> pathTo(int v) {
-        if (!hasPathTo(v)) return null;
-        Deque<DirectedEdge> path = new ArrayDeque<>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
-            path.push(e);
-        }
-        return path;
     }
 }

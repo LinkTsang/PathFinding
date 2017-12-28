@@ -5,9 +5,6 @@
  */
 package scau.pathfinding;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 /**
  * @author 陈双意
  */
@@ -15,15 +12,11 @@ import java.util.Deque;
 /**
  * Dijkstra(迪杰斯特拉)算法用于计算一个节点到其他所有节点的最短路径。
  */
-public class Dijkstra {
-
-    private final DirectedEdge[] edgeTo;
-    private final double[] distanceTo;
+public class Dijkstra extends SingleSourceShortestPath {
     private final IndexMinPQ<Double> pq;
 
     public Dijkstra(AdjListGraph G, int s) {
-        edgeTo = new DirectedEdge[G.V()];
-        distanceTo = new double[G.V()];
+        super(G);
         pq = new IndexMinPQ<>(G.V());
         for (int v = 0; v < G.V(); v++) {
             distanceTo[v] = Double.POSITIVE_INFINITY;
@@ -37,37 +30,33 @@ public class Dijkstra {
 
     public static void test0() {
         AdjListGraph G = AdjListGraph.Random(8);
+        long startTime = System.nanoTime();
         Dijkstra sp = new Dijkstra(G, 0);
+        long endTime = System.nanoTime();
+        System.out.printf("Dijkstra test0 cost %f ms\n", (endTime - startTime) / 1000000.0);
         System.out.println(G.toString());
         for (int v = 0; v < G.V(); v++) {
             System.out.println("0 hasPathTo " + v + " : " + sp.hasPathTo(v));
-            showPathTo(sp, v);
+            sp.showPathTo(v);
         }
     }
 
     public static void test1() {
         AdjListGraph G = AdjListGraph.Random(8);
+        long startTime = System.nanoTime();
         Dijkstra sp = new Dijkstra(G, 2);
+        long endTime = System.nanoTime();
+        System.out.printf("Dijkstra test1 cost %f ms\n", (endTime - startTime) / 1000000.0);
         System.out.println(G.toString());
         for (int v = 0; v < G.V(); v++) {
             System.out.println("2 hasPathTo " + v + ": " + sp.hasPathTo(v));
-            showPathTo(sp, v);
+            sp.showPathTo(v);
         }
     }
 
     public static void main(String[] args) {
         test0();
         test1();
-    }
-
-    private static void showPathTo(Dijkstra sp, int v) {
-        if (sp.hasPathTo(v)) {
-            for (DirectedEdge e : sp.pathTo(v)) {
-                System.out.print(e);
-                System.out.print(' ');
-            }
-            System.out.println();
-        }
     }
 
     private void relax(AdjListGraph G, int v) {
@@ -84,25 +73,5 @@ public class Dijkstra {
             }
         }
 
-    }
-
-    public double distanceTo(int v) {
-
-        return distanceTo[v];
-    }
-
-    public boolean hasPathTo(int v) {
-        return distanceTo[v] < Double.POSITIVE_INFINITY;
-    }
-
-    public Iterable<DirectedEdge> pathTo(int v) {
-        if (!hasPathTo(v)) {
-            return null;
-        }
-        Deque<DirectedEdge> path = new ArrayDeque<>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
-            path.push(e);
-        }
-        return path;
     }
 }

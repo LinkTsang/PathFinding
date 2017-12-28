@@ -50,8 +50,10 @@ public class Floyd {
 
     public static void Output() {
         AdjMatrix g = AdjMatrix.getTestAdjMatrix();
+        long startTime = System.nanoTime();
         Floyd y = new Floyd(g);
-
+        long endTime = System.nanoTime();
+        System.out.printf("Floyd cost %f ms\n", (endTime - startTime) / 1000000.0);
         System.out.println("Distance: ");
         System.out.printf("%-12c ", ' ');
         for (int j = 0; j < g.V(); j++) {
