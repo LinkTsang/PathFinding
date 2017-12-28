@@ -5,7 +5,8 @@
  */
 package scau.pathfinding;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * @author 陈双意
@@ -39,12 +40,8 @@ public class Dijkstra {
         Dijkstra sp = new Dijkstra(G, 0);
         System.out.println(G.toString());
         for (int v = 0; v < G.V(); v++) {
-            System.out.println("0 hasPathTo" + v + ": " + sp.hasPathTo(v));
-            if (sp.hasPathTo(v)) {
-                for (DirectedEdge e : sp.pathTo(v)) {
-                    System.out.println(e.toString());
-                }
-            }
+            System.out.println("0 hasPathTo " + v + " : " + sp.hasPathTo(v));
+            showPathTo(sp, v);
         }
     }
 
@@ -54,17 +51,23 @@ public class Dijkstra {
         System.out.println(G.toString());
         for (int v = 0; v < G.V(); v++) {
             System.out.println("2 hasPathTo " + v + ": " + sp.hasPathTo(v));
-            if (sp.hasPathTo(v)) {
-                for (DirectedEdge e : sp.pathTo(v)) {
-                    System.out.println(e.toString());
-                }
-            }
+            showPathTo(sp, v);
         }
     }
 
     public static void main(String[] args) {
         test0();
         test1();
+    }
+
+    private static void showPathTo(Dijkstra sp, int v) {
+        if (sp.hasPathTo(v)) {
+            for (DirectedEdge e : sp.pathTo(v)) {
+                System.out.print(e);
+                System.out.print(' ');
+            }
+            System.out.println();
+        }
     }
 
     private void relax(AdjListGraph G, int v) {
@@ -96,7 +99,7 @@ public class Dijkstra {
         if (!hasPathTo(v)) {
             return null;
         }
-        Stack<DirectedEdge> path = new Stack<>();
+        Deque<DirectedEdge> path = new ArrayDeque<>();
         for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
             path.push(e);
         }

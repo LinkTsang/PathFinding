@@ -1,6 +1,7 @@
 package scau.pathfinding;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * @author Link
@@ -40,7 +41,8 @@ public class BellmanFord implements ShortPath {
             Iterable<DirectedEdge> paths = bf.pathTo(dest);
             if (paths != null) {
                 for (DirectedEdge e : paths) {
-                    System.out.println(e);
+                    System.out.print(e);
+                    System.out.print(' ');
                 }
             } else {
                 System.out.println("No such path.");
@@ -104,7 +106,7 @@ public class BellmanFord implements ShortPath {
     @Override
     public Iterable<DirectedEdge> pathTo(int v) {
         if (!hasPathTo(v)) return null;
-        Stack<DirectedEdge> path = new Stack<>();
+        Deque<DirectedEdge> path = new ArrayDeque<>();
         for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
             path.push(e);
         }
