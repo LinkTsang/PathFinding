@@ -29,14 +29,13 @@ public class AdjListGraph implements Graph {
      */
     public static AdjListGraph Random(int n) {
         Random random = new Random();
-        AdjListGraph g = new AdjListGraph(10);
-        int vertexCount = 10;
-        for (int i = 0; i < vertexCount; ++i) {
-            int count = random.nextInt(vertexCount) + 1;
+        AdjListGraph g = new AdjListGraph(n);
+        for (int i = 0; i < n; ++i) {
+            int count = random.nextInt(n) + 1;
             for (int j = 0; j < count; ++j) {
                 int to;
                 do {
-                    to = random.nextInt(vertexCount);
+                    to = random.nextInt(n);
                 } while (to == i);
                 double weight = random.nextDouble() * 10;
                 DirectedEdge edge = new DirectedEdge(i, to, weight);
