@@ -6,43 +6,48 @@ package scau.pathfinding;
  */
 public class TestSingleSourceShortestPath {
     public static void main(String[] args) {
-        int list[] = {10, 100, 1000, 2000};
+        AdjListGraph[] graphs = {
+                AdjListGraph.Random(10),
+                AdjListGraph.Random(100),
+                AdjListGraph.Random(1000),
+                AdjListGraph.Random(2000)
+        };
         int count = 10;
 
-        for (int x : list) {
+        for (AdjListGraph g : graphs) {
             double sum = 0;
             for (int i = 0; i < count; ++i) {
-                long duration = testBFS(x);
+                long duration = testBFS(g);
                 sum += duration / 1000000.0;
             }
             System.out.printf("average: %f ms\n", sum / 5);
         }
         System.out.println();
 
-        for (int x : list) {
+        for (AdjListGraph g : graphs) {
             double sum = 0;
             for (int i = 0; i < count; ++i) {
-                long duration = testDijkstra(x);
+                long duration = testDijkstra(g);
                 sum += duration / 1000000.0;
             }
             System.out.printf("average: %f ms\n", sum / 5);
         }
         System.out.println();
 
-        for (int x : list) {
+        for (AdjListGraph g : graphs) {
             double sum = 0;
             for (int i = 0; i < count; ++i) {
-                long duration = testBellmanFord(x);
+                long duration = testSPFA(g);
                 sum += duration / 1000000.0;
             }
             System.out.printf("average: %f ms\n", sum / 5);
         }
         System.out.println();
 
-        for (int x : list) {
+        for (AdjListGraph g : graphs) {
             double sum = 0;
             for (int i = 0; i < count; ++i) {
-                long duration = testSPFA(x);
+                long duration = testBellmanFord(g);
                 sum += duration / 1000000.0;
             }
             System.out.printf("average: %f ms\n", sum / 5);
@@ -50,12 +55,11 @@ public class TestSingleSourceShortestPath {
         System.out.println();
     }
 
-    public static long testBFS(int v) {
-        return testBFS(v, false, -1);
+    public static long testBFS(AdjListGraph g) {
+        return testBFS(g, false, -1);
     }
 
-    public static long testBFS(int v, boolean showPath, int dest) {
-        AdjListGraph g = AdjListGraph.Random(v);
+    public static long testBFS(AdjListGraph g, boolean showPath, int dest) {
         long startTime = System.nanoTime();
         SingleSourceShortestPath sp = new BFS(g, 0);
         long endTime = System.nanoTime();
@@ -70,12 +74,11 @@ public class TestSingleSourceShortestPath {
         return duration;
     }
 
-    public static long testDijkstra(int v) {
-        return testDijkstra(v, false, -1);
+    public static long testDijkstra(AdjListGraph g) {
+        return testDijkstra(g, false, -1);
     }
 
-    public static long testDijkstra(int v, boolean showPath, int dest) {
-        AdjListGraph g = AdjListGraph.Random(v);
+    public static long testDijkstra(AdjListGraph g, boolean showPath, int dest) {
         long startTime = System.nanoTime();
         SingleSourceShortestPath sp = new Dijkstra(g, 0);
         long endTime = System.nanoTime();
@@ -90,12 +93,11 @@ public class TestSingleSourceShortestPath {
         return duration;
     }
 
-    public static long testSPFA(int v) {
-        return testSPFA(v, false, -1);
+    public static long testSPFA(AdjListGraph g) {
+        return testSPFA(g, false, -1);
     }
 
-    public static long testSPFA(int v, boolean showPath, int dest) {
-        AdjListGraph g = AdjListGraph.Random(v);
+    public static long testSPFA(AdjListGraph g, boolean showPath, int dest) {
         long startTime = System.nanoTime();
         SingleSourceShortestPath sp = new SPFA(g, 0);
         long endTime = System.nanoTime();
@@ -110,12 +112,11 @@ public class TestSingleSourceShortestPath {
         return duration;
     }
 
-    public static long testBellmanFord(int v) {
-        return testSPFA(v, false, -1);
+    public static long testBellmanFord(AdjListGraph g) {
+        return testBellmanFord(g, false, -1);
     }
 
-    public static long testBellmanFord(int v, boolean showPath, int dest) {
-        AdjListGraph g = AdjListGraph.Random(v);
+    public static long testBellmanFord(AdjListGraph g, boolean showPath, int dest) {
         long startTime = System.nanoTime();
         SingleSourceShortestPath sp = new BellmanFord(g, 0);
         long endTime = System.nanoTime();
