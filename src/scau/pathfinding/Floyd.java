@@ -36,6 +36,11 @@ public class Floyd {
                 }
             }
         }
+        for (v = 0; v < g.V(); ++v) {
+            for (v = 0; v < g.V(); ++v) {
+                distance[v][v] = 0;
+            }
+        }
         for (k = 0; k < g.V(); ++k) {
             for (v = 0; v < g.V(); ++v) {
                 for (w = 0; w < g.V(); ++w) {
@@ -125,5 +130,9 @@ public class Floyd {
             from = pathMatrix[from][to];
         }
         return path;
+    }
+
+    public double distance(int u, int v) {
+        return distance[u][v];
     }
 }

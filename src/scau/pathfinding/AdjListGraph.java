@@ -94,4 +94,32 @@ public class AdjListGraph implements Graph {
         }
         return buffer.toString();
     }
+
+    public static AdjListGraph fromAdjAdjMatrix(AdjMatrix g) {
+        AdjListGraph adjListGraph = new AdjListGraph(g.V());
+        for (int u = 0; u < g.V(); ++u) {
+            for (int v = 0; v < g.V(); ++v) {
+                if (g.getWeight(u, v) < Double.POSITIVE_INFINITY)
+                    adjListGraph.addEdge(new DirectedEdge(u, v, g.getWeight(u, v)));
+            }
+        }
+        return adjListGraph;
+    }
+
+    public static AdjListGraph Random(int v, int e) {
+        Random random = new Random();
+        AdjListGraph g = new AdjListGraph(v);
+        while (g.E() < e) {
+            int from;
+            int to;
+            do {
+                from = random.nextInt(v);
+                to = random.nextInt(v);
+            } while (from == to);
+            double weight = random.nextDouble() * 10;
+            DirectedEdge edge = new DirectedEdge(from, to, weight);
+            g.addEdge(edge);
+        }
+        return g;
+    }
 }

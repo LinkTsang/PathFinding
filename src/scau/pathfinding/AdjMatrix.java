@@ -49,6 +49,25 @@ public class AdjMatrix {
         return g;
     }
 
+    public static AdjMatrix Random(int v, int e) {
+        Random random = new Random();
+        AdjMatrix g = new AdjMatrix(v);
+        for (int i = 0; i < v; ++i) {
+            g.insertVertex(i);
+        }
+        while (g.E() < e) {
+            int from;
+            int to;
+            do {
+                from = random.nextInt(v);
+                to = random.nextInt(v);
+            } while (from == to);
+            double weight = random.nextDouble() * 10;
+            g.insertEdge(from, to, weight);
+        }
+        return g;
+    }
+
     public static AdjMatrix getTestAdjMatrix() {
         int vexCount = 8;
         return AdjMatrix.Random(vexCount);
