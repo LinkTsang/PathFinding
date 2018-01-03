@@ -7,8 +7,8 @@ import java.util.Deque;
  * @author Link
  */
 public abstract class SingleSourceShortestPath {
-    protected double distanceTo[];
-    protected DirectedEdge edgeTo[];
+    protected double distanceTo[];          // 从起点到某个顶点的路径长度
+    protected DirectedEdge edgeTo[];        // 从起点到某个顶点的最后一条边
 
     protected SingleSourceShortestPath(AdjListGraph G) {
         edgeTo = new DirectedEdge[G.V()];
@@ -43,6 +43,18 @@ public abstract class SingleSourceShortestPath {
                 System.out.print(' ');
             }
             System.out.println();
+        }
+    }
+
+    public double getPathLength(int v) {
+        if (hasPathTo(v)) {
+            double length = 0;
+            for (DirectedEdge e : pathTo(v)) {
+                length += e.weight();
+            }
+            return length;
+        } else {
+            return Double.POSITIVE_INFINITY;
         }
     }
 }

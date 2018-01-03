@@ -17,7 +17,9 @@ import java.util.List;
  */
 public class Floyd {
 
-    private final int pathMatrix[][];       // pathMatrix[v][w] == -1 if no such path
+    // pathMatrix[v][w]: v 到 w 的第一个中间结点
+    // pathMatrix[v][w] == -1 if no such path
+    private final int pathMatrix[][];
     private final double distance[][];
 
     public Floyd(AdjMatrix g) {
@@ -130,6 +132,17 @@ public class Floyd {
             from = pathMatrix[from][to];
         }
         return path;
+    }
+
+    public double getPathLength(int from, int to) {
+        if (!hasPath(from, to)) {
+            return Double.POSITIVE_INFINITY;
+        }
+        double length = 0;
+        for (DirectedEdge e : path(from, to)) {
+            length += e.weight();
+        }
+        return length;
     }
 
     public double distance(int u, int v) {
