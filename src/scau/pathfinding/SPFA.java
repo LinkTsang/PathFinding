@@ -7,10 +7,10 @@ import java.util.Queue;
  * @author Link
  */
 public class SPFA extends SingleSourceShortestPath {
-    private boolean[] onQueue;
-    private Queue<Integer> queue;
-    private int cost;
-    private Iterable<DirectedEdge> cycle;
+    private boolean[] onQueue;                //  该顶点是否存在于队列中
+    private Queue<Integer> queue;             // 正在被放松的顶点
+    private int cost;                         // relax 的调用次数
+    private Iterable<DirectedEdge> cycle;     // edgeTo 中的负权回路
 
     public SPFA(AdjListGraph g, int s) {
         super(g);
