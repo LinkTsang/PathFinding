@@ -18,7 +18,7 @@ public class TestAllPairsShortestPath {
                 long duration = testFloyd(g);
                 sum += duration / 1000000.0;
             }
-            System.out.printf("average: %f ms\n", sum / 5);
+            System.out.printf("average: %f ms\n", sum / count);
         }
         System.out.println();
         for (AdjListGraph g : adjListGraphs) {
@@ -27,7 +27,7 @@ public class TestAllPairsShortestPath {
                 long duration = testJohnson(g);
                 sum += duration / 1000000.0;
             }
-            System.out.printf("average: %f ms\n", sum / 5);
+            System.out.printf("average: %f ms\n", sum / count);
         }
         System.out.println();
     }

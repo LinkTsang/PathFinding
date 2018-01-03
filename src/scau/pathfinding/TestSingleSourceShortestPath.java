@@ -20,7 +20,7 @@ public class TestSingleSourceShortestPath {
                 long duration = testBFS(g);
                 sum += duration / 1000000.0;
             }
-            System.out.printf("average: %f ms\n", sum / 5);
+            System.out.printf("average: %f ms\n", sum / count);
         }
         System.out.println();
 
@@ -30,7 +30,7 @@ public class TestSingleSourceShortestPath {
                 long duration = testDijkstra(g);
                 sum += duration / 1000000.0;
             }
-            System.out.printf("average: %f ms\n", sum / 5);
+            System.out.printf("average: %f ms\n", sum / count);
         }
         System.out.println();
 
@@ -40,7 +40,7 @@ public class TestSingleSourceShortestPath {
                 long duration = testSPFA(g);
                 sum += duration / 1000000.0;
             }
-            System.out.printf("average: %f ms\n", sum / 5);
+            System.out.printf("average: %f ms\n", sum / count);
         }
         System.out.println();
 
@@ -50,7 +50,7 @@ public class TestSingleSourceShortestPath {
                 long duration = testBellmanFord(g);
                 sum += duration / 1000000.0;
             }
-            System.out.printf("average: %f ms\n", sum / 5);
+            System.out.printf("average: %f ms\n", sum / count);
         }
         System.out.println();
     }
